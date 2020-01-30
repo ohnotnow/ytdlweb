@@ -9,9 +9,9 @@
                     <span class="inline-block border border-blue-500 rounded px-2 bg-blue-500 text-white">{{ $file->speed }}</span>
                 @else
                     <span>{{  $file->title }}</span>
-                    <span class="inline-block border border-green-500 rounded px-2 bg-green-500 text-white">
+                    <a class="inline-block border border-green-500 rounded px-2 bg-green-500 text-white" href="{{ $file->getDownloadLink() }}">
                         Complete
-                    </span>
+                    </a>
                 @endif
                 @if ($file->is_gubbed)
                     <span class="inline-block border border-red-500 rounded px-2 bg-red-500 text-white">

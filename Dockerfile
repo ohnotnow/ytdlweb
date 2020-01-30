@@ -38,6 +38,7 @@ COPY --from=JSLAND /home/node/public/css/ /var/www/html/public/css/
 RUN composer install --no-dev --no-suggest
 
 RUN php artisan storage:link
+RUN ln -s /var/www/html/storage/app/downloads /var/www/html/public/downloads
 
 # and off we go
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "/var/www/html/app-healthcheck" ]

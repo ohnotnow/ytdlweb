@@ -19,6 +19,7 @@ if [ "$role" = "app" ]; then
 
 elif [ "$role" = "queue" ]; then
 
+    /usr/local/bin/youtube-dl -U
     chown www-data:www-data storage/app/downloads
     gosu www-data nice php /var/www/html/artisan queue:work --timeout=3500
 
