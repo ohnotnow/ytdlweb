@@ -4,7 +4,7 @@
             <li class="mb-4">
                 @if (!$file->is_complete)
                     <span>{{ $file->url }}</span>
-                    <span class="inline-block border border-blue-500 rounded px-2 bg-blue-500 text-white">{{ $file->percent }}%</span>
+                    <span class="inline-block border border-blue-500 rounded px-2 bg-blue-500 text-white">{{ $file->percent }}</span>
                     <span class="inline-block border border-blue-500 rounded px-2 bg-blue-500 text-white">{{ $file->eta }}</span>
                     <span class="inline-block border border-blue-500 rounded px-2 bg-blue-500 text-white">{{ $file->speed }}</span>
                 @else
