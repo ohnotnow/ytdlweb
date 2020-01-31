@@ -17,7 +17,6 @@
     @livewire('file-list')
   </div>
 
-  <script src="{{ asset('js/app.js') }}"></script>
   @livewireScripts
 </body>
 
