@@ -11,7 +11,7 @@ if [ "$role" = "app" ]; then
 
 elif [ "$role" = "queue" ]; then
 
-    php /var/www/html/artisan horizon:status | grep -q 'Horizon is running' || exit 1
+    # php /var/www/html/artisan horizon:status | grep -q 'Horizon is running' || exit 1
     exit 0
 
 elif [ "$role" = "migrations" ]; then
