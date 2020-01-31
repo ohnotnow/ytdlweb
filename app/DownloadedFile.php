@@ -18,4 +18,31 @@ class DownloadedFile extends Model
     {
         File::delete($this->filename);
     }
+
+    public function markAsGubbed(string $message)
+    {
+        $this->update([
+            'is_gubbed' => true,
+            'error_message' => $message
+        ]);
+    }
+
+    public function markAsComplete(\YoutubeDl\Entity\Video $video, bool $audioExtracted)
+    {
+        $this->update([
+            'is_complete' => true,
+            'title' => $video->getTitle() . ($audioExtracted ? ' (MP3)' : ''),
+            'filename' => $video->getFile()->getPathname(),
+        ]);
+    }
+
+    public function updateProgress(array $progress)
+    {
+        $this->update([
+            'percent' => $progress['percentage'],
+            'size' => $progress['size'],
+            'speed' => $progress['speed'] ?? null,
+            'eta' => $progress['eta'] ?? null,
+        ]);
+    }
 }

@@ -1,0 +1,81 @@
+version: "3.7"
+
+x-env:
+  environment: &default-env
+    REDIS_HOST: redis
+    APP_NAME: YTDownload
+    APP_ENV: local
+    APP_KEY: "base64:5lSGM3qmIQsJVrkTmRroP1vsXikC6eLQdRm8uQSUGMI:"
+    APP_DEBUG: "true"
+    APP_URL: "http://localhost"
+    LOG_CHANNEL: stderr
+    DB_CONNECTION: sqlite
+    DB_DATABASE: /tmp/sqlite/database.sqlite
+    CACHE_DRIVER: redis
+    QUEUE_CONNECTION: redis
+    SESSION_DRIVER: redis
+
+services:
+  app:
+    environment:
+      CONTAINER_ROLE: app
+      <<: *default-env
+    ports:
+      - "${APP_PORT:-3000}:80"
+    build:
+      context: .
+      target: PHPLAND
+    image: ohffs/ytdlweb:0.1
+    volumes:
+      - type: volume
+        source: /home/transmission/downloads
+        target: /var/www/html/storage/app/downloads
+      - type: volume
+        source: database
+        target: /tmp/sqlite/
+    depends_on:
+      - redis
+
+  queue:
+    environment:
+      CONTAINER_ROLE: queue
+      <<: *default-env
+    build:
+      context: .
+      target: PHPLAND
+    image: ohffs/ytdlweb:0.1
+    depends_on:
+      - app
+    volumes:
+      - type: volume
+        source: /home/transmission/downloads
+        target: /var/www/html/storage/app/downloads
+      - type: volume
+        source: database
+        target: /tmp/sqlite/
+
+  migrations:
+    environment:
+      CONTAINER_ROLE: migrations
+      <<: *default-env
+    build:
+      context: .
+      target: PHPLAND
+    image: ohffs/ytdlweb:0.1
+    depends_on:
+      - app
+    volumes:
+      - type: volume
+        source: database
+        target: /tmp/sqlite/
+
+  redis:
+    image: redis:5.0.4
+    volumes:
+      - redis:/data
+
+volumes:
+  redis:
+    driver: "local"
+  database:
+    driver: "local"
