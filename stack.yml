@@ -25,9 +25,9 @@ services:
     build:
       context: .
       target: PHPLAND
-    image: ohffs/ytdlweb:0.2
+    image: ${IMAGE_NAME:-ohffs/ytdlweb:0.2}
     volumes:
-      - /home/transmission/downloads:/var/www/html/storage/app/downloads
+      - /home/transmission/downloads/youtube:/var/www/html/storage/app/downloads
       - database:/tmp/sqlite/
     depends_on:
       - redis
@@ -39,11 +39,11 @@ services:
     build:
       context: .
       target: PHPLAND
-    image: ohffs/ytdlweb:0.2
+    image: ${IMAGE_NAME:-ohffs/ytdlweb:0.2}
     depends_on:
       - app
     volumes:
-      - /home/transmission/downloads:/var/www/html/storage/app/downloads
+      - /home/transmission/downloads/youtube:/var/www/html/storage/app/downloads
       - database:/tmp/sqlite/
 
   migrations:
@@ -53,7 +53,7 @@ services:
     build:
       context: .
       target: PHPLAND
-    image: ohffs/ytdlweb:0.2
+    image: ${IMAGE_NAME:-ohffs/ytdlweb:0.2}
     depends_on:
       - app
     volumes:
