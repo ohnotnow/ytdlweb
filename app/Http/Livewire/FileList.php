@@ -14,4 +14,11 @@ class FileList extends Component
         $this->files = DownloadedFile::latest()->get();
         return view('livewire.file-list');
     }
+
+    public function removeFile($fileId)
+    {
+        $file = DownloadedFile::findOrFail($fileId);
+        $file->removeFromDisk();
+        $file->delete();
+    }
 }

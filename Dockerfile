@@ -23,10 +23,15 @@ WORKDIR /var/www/html/
 RUN chown www-data:www-data /var/www/html
 
 # install the packages we need
-RUN apt-get update && apt-get install -y --no-install-recommends gosu ffmpeg curl python${PYTHON_VERSION} && ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python
-RUN curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl && chmod a+rx /usr/local/bin/youtube-dl
-# make sure our db directory exists and will be writeable
-RUN mkdir /tmp/sqlite && chown www-data:www-data /tmp/sqlite
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gosu ffmpeg curl python${PYTHON_VERSION} && \
+    rm -rf /var/cache/apt/archives && \
+    ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
+    curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl && \
+    chmod a+rx /usr/local/bin/youtube-dl && \
+    chown -R www-data:www-data /usr/local/bin && \
+    # make sure our db directory exists and will be writeable
+    mkdir /tmp/sqlite && chown www-data:www-data /tmp/sqlite
 
 # copy all our code in
 COPY --chown=www-data:www-data . /var/www/html/
@@ -34,11 +39,10 @@ RUN chmod +x /var/www/html/app-start /var/www/html/app-healthcheck
 COPY --from=JSLAND /home/node/public/js/ /var/www/html/public/js/
 COPY --from=JSLAND /home/node/public/css/ /var/www/html/public/css/
 
-# install php deps
-RUN composer install --no-dev --no-suggest
-
-RUN php artisan storage:link
-RUN ln -s /var/www/html/storage/app/downloads /var/www/html/public/downloads
+# install php stuff
+RUN composer install --no-dev --no-suggest && \
+    php artisan storage:link && \
+    ln -s /var/www/html/storage/app/downloads /var/www/html/public/downloads
 
 # and off we go
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "/var/www/html/app-healthcheck" ]

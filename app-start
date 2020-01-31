@@ -19,8 +19,8 @@ if [ "$role" = "app" ]; then
 
 elif [ "$role" = "queue" ]; then
 
-    /usr/local/bin/youtube-dl -U
     chown www-data:www-data storage/app/downloads
+    gosu www-data php /var/www/html/artisan ytdl:update-youtube-dl
     gosu www-data nice php /var/www/html/artisan queue:work --timeout=3500
 
 elif [ "$role" = "migrations" ]; then

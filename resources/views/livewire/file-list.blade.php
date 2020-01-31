@@ -12,6 +12,9 @@
                     <a class="inline-block border border-green-500 rounded px-2 bg-green-500 text-white" href="{{ $file->getDownloadLink() }}">
                         Complete
                     </a>
+                    <button class="inline-block border border-red-500 rounded px-2 bg-red-500 text-white" wire:click="removeFile({{$file->id}})">
+                        Remove
+                    </button>
                 @endif
                 @if ($file->is_gubbed)
                     <span class="inline-block border border-red-500 rounded px-2 bg-red-500 text-white">
