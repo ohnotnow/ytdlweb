@@ -35,3 +35,8 @@ __Note:__ The code will attempt to change the user permissions on the directory 
 You'll need PHP v7.3+ and a webserver.  You also need something which will run the queue process in the background for you like systemd or supervisor.
 
 ... More to come
+
+## Thanks
+
+Thanks to some other open source projects that have made writing this a breeze.  [Laravel](https://laravel.com/), [LiveWire](https://laravel-livewire.com/), [Tailwind](https://laravel-livewire.com/).  Also the really nice youtube-dl library [norkunas/youtube-dl-php](https://github.com/norkunas/youtube-dl-php) and of course the good people at [youtube-dl](http://ytdl-org.github.io/youtube-dl/) itself.
+
