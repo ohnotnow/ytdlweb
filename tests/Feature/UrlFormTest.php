@@ -18,14 +18,13 @@ class UrlFormTest extends TestCase
     public function when_the_form_is_submitted_we_dispatch_an_event_and_clear_the_existing_form_data()
     {
         Bus::fake();
-        $form = Livewire::test(UrlForm::class);
-        $form->url = 'http://www.example.com';
-        $form->extractAudio = true;
+        Livewire::test(UrlForm::class)
+            ->set('url', 'http://www.example.com')
+            ->set('extractAudio', true)
+            ->call('queueDownload')
+            ->assertSet('url', null)
+            ->assertSet('extractAudio', false);
 
-        $form->queueDownload();
-
-        $this->assertNull($form->url);
-        $this->assertFalse($form->extractAudio);
         Bus::assertDispatched(DownloadFile::class);
     }
 }

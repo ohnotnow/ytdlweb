@@ -30,9 +30,8 @@ class FileListTest extends TestCase
     {
         File::put('/tmp/test.txt', '');
         $file = factory(DownloadedFile::class)->create(['filename' => '/tmp/test.txt']);
-        $fileList = Livewire::test(FileList::class);
-
-        $fileList->removeFile($file->id);
+        Livewire::test(FileList::class)
+            ->call('removeFile', $file->id);
 
         $this->assertFalse(file_exists('/tmp/test.txt'));
         $this->assertDatabaseMissing('downloaded_files', ['id' => $file->id]);
