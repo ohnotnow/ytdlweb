@@ -82,13 +82,15 @@ class DownloadFile implements ShouldQueue
         app(Filesystem::class)->ensureDirectoryExists($downloadDir, $mode = 0755, $recursive = true);
         $downloader->setDownloadPath($downloadDir);
         $downloader->setBinPath('/usr/local/bin/youtube-dl');
-        $downloader->debug(function ($type, $buffer) {
-            if (\Symfony\Component\Process\Process::ERR === $type) {
-                info('ERR > ' . $buffer);
-            } else {
-                info('OUT > ' . $buffer);
-            }
-        });
+        if (config('app.debug')) {
+            $downloader->debug(function ($type, $buffer) {
+                if (\Symfony\Component\Process\Process::ERR === $type) {
+                    info('ERR > ' . $buffer);
+                } else {
+                    info('OUT > ' . $buffer);
+                }
+            });
+        }
         return $downloader;
     }
 }
