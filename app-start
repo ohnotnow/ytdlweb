@@ -19,14 +19,14 @@ if [ "$role" = "app" ]; then
 
 elif [ "$role" = "queue" ]; then
 
-    chown www-data:www-data storage/app/downloads
-    gosu www-data php /var/www/html/artisan ytdl:update-youtube-dl
-    gosu www-data nice php /var/www/html/artisan queue:work --timeout=3500
+    chown ${USER_ID}:${GROUP_ID} storage/app/downloads
+    gosu ${USER_ID}:${GROUP_ID} php /var/www/html/artisan ytdl:update-youtube-dl
+    gosu ${USER_ID}:${GROUP_ID} nice php /var/www/html/artisan queue:work --timeout=3500
 
 elif [ "$role" = "migrations" ]; then
 
-    gosu www-data touch /tmp/sqlite/database.sqlite
-    gosu www-data php /var/www/html/artisan migrate --force
+    gosu ${USER_ID}:${GROUP_ID} touch /tmp/sqlite/database.sqlite
+    gosu ${USER_ID}:${GROUP_ID} php /var/www/html/artisan migrate --force
     while [ true ]
     do
         sleep 86400

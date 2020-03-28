@@ -13,14 +13,20 @@ COPY resources/ /home/node/resources/
 # install node stuff and build our assets
 RUN npm ci && npm run prod
 
+####################################################################
 FROM uogsoe/soe-php-apache:7.4 as PHPLAND
 
+# default uid/guid (33 is www-data in the image)
+ARG USER_ID=33
+ARG GROUP_ID=33
 ENV PYTHON_VERSION 3.7
+ENV USER_ID ${USER_ID}
+ENV GROUP_ID ${GROUP_ID}
 
 WORKDIR /var/www/html/
 
-# make sure background processes can write to our workdir as www-data
-RUN chown www-data:www-data /var/www/html
+# make sure background processes can write to our workdir as ${USER_ID}
+RUN chown ${USER_ID}:${GROUP_ID} /var/www/html
 
 # install the packages we need
 RUN apt-get update && \
@@ -29,12 +35,12 @@ RUN apt-get update && \
     ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
     curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl && \
     chmod a+rx /usr/local/bin/youtube-dl && \
-    chown -R www-data:www-data /usr/local/bin && \
+    chown -R ${USER_ID}:${GROUP_ID} /usr/local/bin && \
     # make sure our db directory exists and will be writeable
-    mkdir /tmp/sqlite && chown www-data:www-data /tmp/sqlite
+    mkdir /tmp/sqlite && chown ${USER_ID}:${GROUP_ID} /tmp/sqlite
 
 # copy all our code in
-COPY --chown=www-data:www-data . /var/www/html/
+COPY --chown=${USER_ID}:${GROUP_ID} . /var/www/html/
 RUN chmod +x /var/www/html/app-start /var/www/html/app-healthcheck
 COPY --from=JSLAND /home/node/public/js/ /var/www/html/public/js/
 COPY --from=JSLAND /home/node/public/css/ /var/www/html/public/css/
